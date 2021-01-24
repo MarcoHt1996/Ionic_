@@ -10,22 +10,9 @@
         </ion-header>
         <ion-content>
             <ion-list>
-                <ion-item>
-                    <ion-label>Pertemuan 1</ion-label>
-                    <ion-badge color="success">Hadir</ion-badge>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Pertemuan 2</ion-label>
-                    <ion-badge color="success">Hadir</ion-badge>
-                </ion-item><ion-item>
-                    <ion-label>Pertemuan 3</ion-label>
-                    <ion-badge color="success">Hadir</ion-badge>
-                </ion-item><ion-item>
-                    <ion-label>Pertemuan 4</ion-label>
-                    <ion-badge color="success">Hadir</ion-badge>
-                </ion-item><ion-item>
-                    <ion-label>Pertemuan 5</ion-label>
-                    <ion-badge color="success">Hadir</ion-badge>
+                <ion-item v-for=" (item,id) in kelasdetail" :key="id">
+                    <ion-label>Pertemuan {{ item.pertemuan }}</ion-label>
+                    <ion-badge color="success" slot="end">{{ item.status}}</ion-badge>
                 </ion-item>
             </ion-list>
         </ion-content>
@@ -45,8 +32,14 @@
         IonBadge
 } from '@ionic/vue'
 import {defineComponent} from 'vue'
+import axios from 'axios'
 
       export default defineComponent ({
+          data(){
+              return{
+                  kelasdetail: []
+              }
+          },
           components:{
               IonHeader,
         IonToolbar,
@@ -57,6 +50,15 @@ import {defineComponent} from 'vue'
         IonItem,
         IonLabel,
         IonBadge
+         },
+         mounted(){
+             axios.post("https://http://3.238.40.67/api/kelasdetail",{
+                 "user_id": localStorage.getItem("user_id"),
+                 "kelas_id": this.$route.params.id
+             })
+             .then(response =>{
+                  this.kelasdetail = response.data.data
+             })
          }
         
     })
